@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مبدل کد مورس</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap">
+<style>
+:root{
+  --bg1:#031c24;--bg2:#06303b;--blob1:#0f6b7a;--blob2:#134e8a;--blob3:#0a8f8a;
+  --glass:rgba(255,255,255,.08);--glass-b:rgba(255,255,255,.22);--text:#e6f6f8;--muted:#8fb8c0;--accent:#5fe3d5;
+  color-scheme:dark;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg1:#0a3a47;--bg2:#0d5566;--blob1:#2aa3b5;--blob2:#2f78c2;--blob3:#27b5a8;
+}}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:"Vazirmatn",Tahoma,sans-serif;color:var(--text);background:linear-gradient(160deg,var(--bg1),var(--bg2));min-height:100vh;overflow-x:hidden}
+.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.7;z-index:0;animation:float 18s ease-in-out infinite}
+.b1{width:340px;height:340px;background:var(--blob1);top:-80px;right:-60px}
+.b2{width:300px;height:300px;background:var(--blob2);bottom:-60px;left:-80px;animation-delay:-6s}
+.b3{width:220px;height:220px;background:var(--blob3);top:45%;left:35%;animation-delay:-11s}
+@keyframes float{50%{transform:translate(40px,-50px) scale(1.15)}}
+main{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:28px 18px 40px;display:grid;gap:16px}
+.glass{
+  background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
+  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid var(--glass-b);border-radius:26px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -1px 0 rgba(255,255,255,.08),0 10px 40px rgba(0,0,0,.35);
+  position:relative;overflow:hidden;
+}
+.glass::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 60% at 20% 0%,rgba(255,255,255,.18),transparent 55%);pointer-events:none}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;gap:12px}
+h1{font-size:1.25rem;margin:0;font-weight:700}
+#status{display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid var(--glass-b);font-size:.9rem;font-weight:500;transition:.4s}
+#status i{width:9px;height:9px;border-radius:50%;background:#e5b84a;box-shadow:0 0 10px #e5b84a;transition:.4s}
+#status.ready{color:var(--accent)}
+#status.ready i{background:var(--accent);box-shadow:0 0 12px var(--accent)}
+#status.pop{animation:pop .6s ease}
+@keyframes pop{40%{transform:scale(1.12)}}
+.card{padding:18px 20px 20px}
+.row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+label{font-size:.9rem;color:var(--muted);font-weight:500}
+textarea{
+  width:100%;min-height:130px;resize:vertical;border:1px solid rgba(255,255,255,.18);border-radius:18px;
+  background:rgba(2,20,26,.35);color:var(--text);font:inherit;font-size:1.05rem;padding:14px 16px;line-height:1.8;outline:none;
+  transition:border-color .25s,box-shadow .25s;position:relative;
+}
+textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(95,227,213,.2)}
+textarea::placeholder{color:rgba(230,246,248,.4)}
+#morse{direction:ltr;text-align:left;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.25rem;letter-spacing:.12em}
+.btns{display:flex;gap:8px}
+button{
+  font:inherit;font-size:.85rem;color:var(--text);cursor:pointer;padding:7px 14px;border-radius:999px;
+  background:rgba(255,255,255,.1);border:1px solid var(--glass-b);box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
+  transition:transform .15s,background .2s;
+}
+button:hover{background:rgba(255,255,255,.18)}
+button:active{transform:scale(.95)}
+button.main{background:linear-gradient(135deg,rgba(95,227,213,.35),rgba(47,120,194,.35))}
+.hint{font-size:.8rem;color:var(--muted);text-align:center;line-height:1.9}
+@media (prefers-reduced-motion:reduce){.blob{animation:none}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<main>
+  <header class="glass">
+    <h1>مبدل کد مورس</h1>
+    <div id="status"><i></i><span>در حال آماده‌سازی…</span></div>
+  </header>
+
+  <section class="glass card">
+    <div class="row"><label for="text">حرف</label>
+      <div class="btns"><button id="cp1">کپی</button><button id="clr">پاک کردن</button></div></div>
+    <textarea id="text" dir="auto" placeholder="متن یا حروف خود را وارد کنید" spellcheck="false"></textarea>
+  </section>
+
+  <section class="glass card">
+    <div class="row"><label for="morse">کد مورس</label>
+      <div class="btns"><button id="play" class="main">▶ پخش صدا</button><button id="cp2">کپی</button></div></div>
+    <textarea id="morse" dir="ltr" placeholder="کد مورس خود را وارد کنید" spellcheck="false"></textarea>
+  </section>
+
+  <p class="hint">هر دو کادر دوطرفه‌اند؛ در هرکدام بنویسید، دیگری خودکار پر می‌شود.<br>
+  بین حروف یک فاصله و بین کلمات «/» بگذارید. حروف انگلیسی و اعداد پشتیبانی می‌شوند.</p>
+</main>
+
+<script>
+const M={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..',
+'0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.',
+'.':'.-.-.-',',':'--..--','?':'..--..','!':'-.-.--',':':'---...','/':'-..-.','-':'-....-','(':'-.--.',')':'-.--.-','@':'.--.-.','=':'-...-','+':'.-.-.'};
+const R=Object.fromEntries(Object.entries(M).map(([k,v])=>[v,k]));
+const $=id=>document.getElementById(id);
+const textEl=$('text'),morseEl=$('morse');
+
+function toMorse(t){
+  return t.toUpperCase().trim().split(/\s+/).map(w=>
+    [...w].map(c=>M[c]).filter(Boolean).join(' ')).filter(Boolean).join(' / ');
+}
+function toText(m){
+  m=m.replace(/[·•]/g,'.').replace(/[−–—_]/g,'-');
+  return m.trim().split(/\s*\/\s*|\s{3,}/).map(w=>
+    w.trim().split(/\s+/).filter(Boolean).map(c=>R[c]||'?').join('')).filter(Boolean).join(' ');
+}
+textEl.addEventListener('input',()=>{morseEl.value=toMorse(textEl.value)});
+morseEl.addEventListener('input',()=>{textEl.value=toText(morseEl.value)});
+$('clr').onclick=()=>{textEl.value='';morseEl.value='';stop()};
+
+async function copy(el){try{await navigator.clipboard.writeText(el.value)}catch(e){el.select();document.execCommand&&document.execCommand('copy')}}
+$('cp1').onclick=()=>copy(textEl);$('cp2').onclick=()=>copy(morseEl);
+
+/* ---------- sound ---------- */
+let ctx=null,timer=null,nodes=[];
+function ac(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return ctx}
+function tone(freq,start,dur,vol=.18,type='sine'){
+  const c=ac();if(!c)return;
+  const o=c.createOscillator(),g=c.createGain();
+  o.type=type;o.frequency.value=freq;
+  g.gain.setValueAtTime(0,start);g.gain.linearRampToValueAtTime(vol,start+.012);
+  g.gain.setValueAtTime(vol,start+dur-.02);g.gain.linearRampToValueAtTime(0,start+dur);
+  o.connect(g).connect(c.destination);o.start(start);o.stop(start+dur+.02);nodes.push(o);
+}
+function chime(){
+  const c=ac();if(!c)return false;
+  if(c.state!=='running')return false;
+  const t=c.currentTime+.02;
+  tone(659.25,t,.28,.16);tone(880,t+.14,.28,.16);tone(1318.5,t+.28,.55,.14);
+  return true;
+}
+function stop(){nodes.forEach(o=>{try{o.stop()}catch(e){}});nodes=[];clearTimeout(timer);$('play').textContent='▶ پخش صدا'}
+$('play').onclick=async()=>{
+  if($('play').textContent.includes('توقف')){stop();return}
+  const c=ac();if(!c)return;
+  try{await c.resume()}catch(e){}
+  const code=morseEl.value.replace(/[·•]/g,'.').replace(/[−–—_]/g,'-');
+  if(!code.trim())return;
+  const u=.075;let t=c.currentTime+.05;
+  for(const ch of code){
+    if(ch==='.'){tone(650,t,u);t+=u*2}
+    else if(ch==='-'){tone(650,t,u*3);t+=u*4}
+    else if(ch===' '){t+=u*2}
+    else if(ch==='/'){t+=u*3}
+  }
+  $('play').textContent='■ توقف';
+  timer=setTimeout(stop,(t-c.currentTime)*1000+100);
+};
+
+/* ---------- ready state ---------- */
+const st=$('status');let pendingChime=false;
+function setReady(){
+  st.classList.add('ready','pop');st.querySelector('span').textContent='آماده‌س';
+  if(!chime())pendingChime=true;
+}
+window.addEventListener('pointerdown',async()=>{
+  if(!pendingChime)return;
+  const c=ac();if(!c)return;
+  try{await c.resume()}catch(e){}
+  if(chime())pendingChime=false;
+},{passive:true});
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(setReady,900));
+</script>
+</body>
+</html>
